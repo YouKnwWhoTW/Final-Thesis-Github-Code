@@ -1,0 +1,91 @@
+
+
+/**
+ * E-Prescription Management On Blockchain Security
+ */
+namespace org.ehr.basic
+
+
+// Name of hospitals used for this project
+enum Hospitals {
+  o BadriPoly
+  o Badran
+  o Shaalan
+}
+
+// DiseasesSpeciality
+enum DiseaseCategory{
+  o General_Physician
+}
+
+// Transaction to get appointment
+transaction confirmAppoint {
+  --> Patient patient
+  --> Doctor doctor
+  --> Consult consult
+}
+// Transaction for recording interaction between doctor and patient during appointment
+transaction consult {
+  --> Patient patient
+  --> Doctor doctor
+  --> Consult consult
+  --> MedPresc medicine
+}
+// Transaction to record purchase of medicines by patient from Pharmacy
+transaction buyMed {
+  --> Patient patient
+  --> Pharmacist Pharmacist
+  --> MedPresc medicine
+}
+
+
+//ASSETS
+// Medical instructions is considered as an Asset
+asset MedPresc identified by medPrescId {
+  o String medPrescId						// Medicine prescription ID
+  o String Medicine
+  --> Patient patient           			// Patient ID is noted
+  // o Medicine medicineType				// Type of medicine
+  o Long mgs							   	// strength of medicine
+  o String instruction						// Intake instructions
+  o Long perDay							  	// Number of tablets/ tbsp/ tsp medicine has to be taken
+}
+// Consultation is considered as an Asset
+asset Consult identified by consultId{
+  o String consultId								// consult ID
+  o String status							    	// Status of consultation
+  o String description								// Description of consultation
+  --> Doctor assigned optional						// Annoted doctor
+  --> Patient patient optional						// Patient details
+ 
+ 
+}
+
+
+
+
+
+//PARTICIPANTS
+// An abstract citizen which shows that everyone of this project will have 
+// these factors alongwith add-ons
+abstract participant Citizen identified by id {
+  o String id								   	// Universal ID of citizen
+  o String firstName							// First Name of citizen
+  o String lastName								// Last Name of citizen
+}
+// Doctor is considered as a participant for this business logic
+participant Doctor extends Citizen {
+  o Hospitals hospital							    // Associated hospital
+  o DiseaseCategory speciality						// Type of disease s(he) specializes in
+ 
+}
+// Pharmacist is considered as a participant for this business logic
+participant Pharmacist extends Citizen {
+//  o Medicine [] listOfMedicine					// List of medicines kept in his store
+}
+
+
+// Patient is considered as a participant for this business logic
+participant Patient extends Citizen {
+   o DiseaseCategory disease						// Type of current ailment incurred by patient 
+}
